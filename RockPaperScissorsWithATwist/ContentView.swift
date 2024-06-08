@@ -46,7 +46,7 @@ struct ContentView: View {
                         Button {
                             checkRock(gameChoices[roboAnswer])
                         } label: {
-                            Text(" Rock: 🪨 ")
+                            Text(" Rock 🪨 ")
                                 .foregroundStyle(.black)
                         }
                         .background(.white.gradient)
@@ -56,7 +56,7 @@ struct ContentView: View {
                         Button {
                             checkPaper(gameChoices[roboAnswer])
                         } label: {
-                            Text(" Paper: 📄 ")
+                            Text(" Paper 📄 ")
                                 .foregroundStyle(.black)
                         }
                         .background(.white.gradient)
@@ -66,7 +66,7 @@ struct ContentView: View {
                         Button {
                             checkScissors(gameChoices[roboAnswer])
                         } label: {
-                            Text(" Scissors: ✂️ ")
+                            Text(" Scissors ✂️ ")
                                 .foregroundStyle(.black)
                         }
                         .background(.white.gradient)
