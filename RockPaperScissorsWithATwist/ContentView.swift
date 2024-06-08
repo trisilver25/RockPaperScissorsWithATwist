@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var gameChoices = ["🪨", "📄", "✂️"].shuffled()
-    
     @State private var roboAnswer = Int.random( in: 0...2)
-    
     @State private var winOrLose = Bool.random() ? "Win" : "Lose"
     
     @State private var correct = false
     
-    @State private var hidden = false
+    @State private var hiddenInfo = false
+    
+    @State private var round = 0
+    @State private var score = 0
+    
     
     
     
@@ -25,31 +27,25 @@ struct ContentView: View {
             ZStack {
                 LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
-                VStack {
-                    HStack {
-                        Spacer()
-                        NavigationLink(destination: infoGuide()) {
-                            Image(systemName: "info.circle")
-                        }
-                        .frame(width: 40, height: 40)
-                        .foregroundStyle(.black)
-                        .font(.title2)
-                        .transition(.slide)
+                
+                VStack(spacing: 30) {
+                    VStack(spacing: 10) {
+                        Text("🤖")
+                            .font(.system(size: 100))
+                        Text("Beep boop, I'll use: \(gameChoices[roboAnswer])")
+                            .font(.system(size: 30))
+                        Text("You need to: \(winOrLose)")
+                            .font(.system(size: 30))
                     }
-                    Text("🤖")
-                        .font(.system(size: 100))
-                    Text("Beep boop, I'll use: \(gameChoices[roboAnswer])")
-                        .font(.system(size: 30))
-                    Text("You need to: \(winOrLose)")
-                        .font(.system(size: 30))
-                        .frame(height: 30)
-                    VStack(spacing: 30) {
+                    Spacer()
+                    VStack (spacing: 30) {
                         Button {
                             checkRock(gameChoices[roboAnswer])
                         } label: {
                             Text(" Rock 🪨 ")
                                 .foregroundStyle(.black)
                         }
+                        .padding(3)
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
@@ -60,6 +56,7 @@ struct ContentView: View {
                             Text(" Paper 📄 ")
                                 .foregroundStyle(.black)
                         }
+                        .padding(3)
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
@@ -70,31 +67,56 @@ struct ContentView: View {
                             Text(" Scissors ✂️ ")
                                 .foregroundStyle(.black)
                         }
+                        .padding(3)
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
-                    }
-                    .frame(height: 200)
-                    VStack(spacing: 20) {
-                        if hidden {
+                        
+                        HStack {
+                            Spacer()
+                            Text("Round \(round)")
+                                .font(.system(size: 25))
+                            Spacer()
+                            Text("Score \(score)")
+                                .font(.system(size: 25))
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                        
+                        if hiddenInfo && round == 8 {
                             Text(correct ? "Correct!" : "Wrong, try again!")
-                                .font(.system(size: 30))
+                                .font(.system(size: 25))
+                            NavigationLink(destination: scoreBoard(score: score)) {
+                                Text("End Game")
+                            }
+                                .padding(10)
+                                .background(.white.gradient)
+                                .clipShape(.capsule)
+                                .foregroundStyle(.black)
+                                .font(.title2)
+                        } else if hiddenInfo {
+                            Text(correct ? "Correct!" : "Wrong, try again!")
+                                .font(.system(size: 25))
                             Button("Next Round"){
                                 newRound()
                             }
+                            .padding(10)
                             .background(.white.gradient)
                             .clipShape(.capsule)
                             .foregroundStyle(.black)
-                            .font(.title)
+                            .font(.title2)
                         }
+                        
+                        
                     }
-                    
-                    
-                    .frame(height: 250)
-                    Spacer()
-                    
                 }
-                .padding()
+                .toolbar {
+                    NavigationLink(destination: infoGuide()) {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(.black)
+                    }
+                }
             }
             
         }
@@ -117,7 +139,13 @@ struct ContentView: View {
         default:
             print("Error")
         }
-        hidden = true
+        
+        if correct {
+            score += 1
+        }
+        
+        hiddenInfo = true
+        round += 1
         
     }
     
@@ -138,8 +166,13 @@ struct ContentView: View {
         default:
             print("Error")
         }
-        hidden = true
         
+        if correct {
+            score += 1
+        }
+        
+        hiddenInfo = true
+        round += 1
     }
     
     func checkScissors(_ roboAnswer: String) {
@@ -160,8 +193,12 @@ struct ContentView: View {
             print("Error")
         }
         
+        if correct {
+            score += 1
+        }
         
-        hidden = true
+        hiddenInfo = true
+        round += 1
         
     }
 
@@ -170,7 +207,7 @@ struct ContentView: View {
         winOrLose = Bool.random() ? "Win" : "Lose"
         gameChoices.shuffle()
         roboAnswer = Int.random(in: 0...2)
-        hidden = false
+        hiddenInfo = false
         
     }
 }
@@ -194,6 +231,20 @@ struct infoGuide: View {
         .background(LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom))
     }
 }
+
+struct scoreBoard: View {
+    var score: Int
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                Text("Match Ended")
+                Text("Your total score is \(score)")
+            }
+        }
+    }
+}
+
 
 #Preview {
     ContentView()
