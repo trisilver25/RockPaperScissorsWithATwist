@@ -23,7 +23,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             ZStack {
-                LinearGradient(colors: [.red, .green, .blue], startPoint: .top, endPoint: .bottom)
+                LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 VStack {
                     HStack {
@@ -49,7 +49,7 @@ struct ContentView: View {
                             Text(" Rock: 🪨 ")
                                 .foregroundStyle(.black)
                         }
-                        .background(.red.gradient)
+                        .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
                         
@@ -59,7 +59,7 @@ struct ContentView: View {
                             Text(" Paper: 📄 ")
                                 .foregroundStyle(.black)
                         }
-                        .background(.mint.gradient)
+                        .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
                         
@@ -69,7 +69,7 @@ struct ContentView: View {
                             Text(" Scissors: ✂️ ")
                                 .foregroundStyle(.black)
                         }
-                        .background(.green.gradient)
+                        .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
                     }
@@ -78,11 +78,12 @@ struct ContentView: View {
                         if hidden {
                             Text(correct ? "Correct!" : "Wrong, try again!")
                                 .font(.system(size: 30))
-                            Button(" Next Round ➡️"){
+                            Button("Next Round"){
                                 newRound()
                             }
-                            .background(.green.gradient)
+                            .background(.white.gradient)
                             .clipShape(.capsule)
+                            .foregroundStyle(.black)
                             .font(.title)
                         }
                     }
@@ -103,10 +104,8 @@ struct ContentView: View {
         case "Win":
             if (roboAnswer == "✂️") {
                 correct = true
-                print(correct)
             } else {
                 correct = false
-                print(correct)
             }
         case "Lose":
             if(roboAnswer == "📄") {
@@ -126,10 +125,8 @@ struct ContentView: View {
         case "Win":
             if (roboAnswer == "🪨") {
                 correct = true
-                print(correct)
             } else {
                 correct = false
-                print(correct)
             }
         case "Lose":
             if(roboAnswer == "✂️") {
@@ -149,10 +146,8 @@ struct ContentView: View {
         case "Win":
             if (roboAnswer == "📄") {
                 correct = true
-                print(correct)
             } else {
                 correct = false
-                print(correct)
             }
         case "Lose":
             if(roboAnswer == "🪨") {
@@ -195,7 +190,7 @@ struct infoGuide: View {
             Spacer()
         }
         .padding()
-        .background(.blue.gradient)
+        .background(LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom))
     }
 }
 
