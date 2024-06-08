@@ -84,7 +84,7 @@ struct ContentView: View {
                         
                         Spacer()
                         
-                        if hiddenInfo && round == 8 {
+                        if hiddenInfo && round == 10 {
                             Text(correct ? "Correct!" : "Wrong, try again!")
                                 .font(.system(size: 25))
                             NavigationLink(destination: scoreBoard(score: score)) {
