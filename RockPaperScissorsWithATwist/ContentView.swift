@@ -34,6 +34,7 @@ struct ContentView: View {
                         .frame(width: 40, height: 40)
                         .foregroundStyle(.black)
                         .font(.title2)
+                        .transition(.slide)
                     }
                     Text("🤖")
                         .font(.system(size: 100))
