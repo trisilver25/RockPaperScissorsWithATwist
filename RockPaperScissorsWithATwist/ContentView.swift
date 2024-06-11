@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var gameChoices = ["🪨", "📄", "✂️"].shuffled()
     @State private var roboAnswer = Int.random( in: 0...2)
+
+
     @State private var winOrLose = Bool.random() ? "Win" : "Lose"
     
     @State private var correct = false
@@ -49,6 +51,7 @@ struct ContentView: View {
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
+                        .disabled(hiddenInfo ? true : false)
                         
                         Button {
                             checkPaper(gameChoices[roboAnswer])
@@ -60,6 +63,7 @@ struct ContentView: View {
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
+                        .disabled(hiddenInfo ? true : false)
                         
                         Button {
                             checkScissors(gameChoices[roboAnswer])
@@ -71,6 +75,7 @@ struct ContentView: View {
                         .background(.white.gradient)
                         .clipShape(.capsule)
                         .font(.system(size: 30))
+                        .disabled(hiddenInfo ? true : false)
                         
                         HStack {
                             Spacer()
@@ -87,7 +92,7 @@ struct ContentView: View {
                         if hiddenInfo && round == 10 {
                             Text(correct ? "Correct!" : "Wrong, try again!")
                                 .font(.system(size: 25))
-                            NavigationLink(destination: scoreBoard(score: score)) {
+                            NavigationLink(destination: scoreBoard(score: score, round: round).navigationBarBackButtonHidden(false)) {
                                 Text("End Game")
                             }
                                 .padding(10)
@@ -204,7 +209,7 @@ struct ContentView: View {
 
     
     func newRound() {
-        winOrLose = Bool.random() ? "Win" : "Lose"
+        winOrLose =  winOrLose == "Win" ? "Lose" : "Win"
         gameChoices.shuffle()
         roboAnswer = Int.random(in: 0...2)
         hiddenInfo = false
@@ -233,13 +238,24 @@ struct infoGuide: View {
 }
 
 struct scoreBoard: View {
+    @Environment(\.dismiss) var dismiss
+    
     var score: Int
+    var round: Int
     
     var body: some View {
         ZStack {
+            LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
             VStack {
                 Text("Match Ended")
+                    .font(.title)
+                
+                Spacer()
+                
                 Text("Your total score is \(score)")
+                
+                Spacer()
             }
         }
     }
