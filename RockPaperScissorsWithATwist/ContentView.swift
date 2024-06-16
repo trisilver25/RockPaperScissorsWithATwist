@@ -17,9 +17,12 @@ struct ContentView: View {
     @State private var correct = false
     
     @State private var hiddenInfo = false
+    @State private var showScoreCard = false
     
     @State private var round = 0
     @State private var score = 0
+    
+    @State private var animationAmount = 0.0
     
     
     
@@ -90,19 +93,29 @@ struct ContentView: View {
                         Spacer()
                         
                         if hiddenInfo && round == 10 {
+                            
                             Text(correct ? "Correct!" : "Wrong, try again!")
                                 .font(.system(size: 25))
-                            NavigationLink(destination: scoreBoard(score: score, round: round).navigationBarBackButtonHidden(false)) {
-                                Text("End Game")
+                            
+                            Button("End Game"){
+                                showScoreCard.toggle()
+                                withAnimation(.spring(duration: 1, bounce: 0.5)){
+                                    animationAmount += 360
+                                }
+                                
                             }
                                 .padding(10)
                                 .background(.white.gradient)
                                 .clipShape(.capsule)
                                 .foregroundStyle(.black)
                                 .font(.title2)
+                                .disabled(showScoreCard ? true : false)
+                            
                         } else if hiddenInfo {
+                            
                             Text(correct ? "Correct!" : "Wrong, try again!")
                                 .font(.system(size: 25))
+                            
                             Button("Next Round"){
                                 newRound()
                             }
@@ -111,16 +124,48 @@ struct ContentView: View {
                             .clipShape(.capsule)
                             .foregroundStyle(.black)
                             .font(.title2)
+
                         }
-                        
-                        
                     }
                 }
+                
                 .toolbar {
                     NavigationLink(destination: infoGuide()) {
                         Image(systemName: "info.circle")
                             .foregroundStyle(.black)
                     }
+                    .disabled(hiddenInfo ? true : false)
+                }
+                
+                if showScoreCard {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(.blue.gradient)
+                            .frame(width: 250, height: 300)
+                            .rotation3DEffect(Angle(degrees: animationAmount), axis: (x: 0, y: 1, z: 0))
+                        
+                        VStack(spacing: 5) {
+                            Text("Results")
+                                .foregroundStyle(.white)
+                                .font(.title)
+                            .rotation3DEffect(Angle(degrees: animationAmount), axis: (x: 0, y: 1, z: 0))
+                            
+                            Text("Your total score is \(score) out of 10")
+                                .foregroundStyle(.white)
+                                .font(.title3)
+                                .rotation3DEffect(Angle(degrees: animationAmount), axis: (x: 0, y: 1, z: 0))
+                            Button("Restart") {
+                                restartGame()
+                            }
+                            .padding(10)
+                            .background(.white.gradient)
+                            .clipShape(.capsule)
+                            .foregroundStyle(.black)
+                            .font(.title2)
+                            .rotation3DEffect(Angle(degrees: animationAmount), axis: (x: 0, y: 1, z: 0))
+                        }
+                    }
+                        
                 }
             }
             
@@ -215,6 +260,17 @@ struct ContentView: View {
         hiddenInfo = false
         
     }
+    
+    func restartGame() {
+        round = 0
+        score = 0
+        gameChoices.shuffle()
+        roboAnswer = Int.random(in: 0...2)
+        winOrLose =  winOrLose == "Win" ? "Lose" : "Win"
+        hiddenInfo = false
+        showScoreCard = false
+        
+    }
 }
 
 struct infoGuide: View {
@@ -234,30 +290,6 @@ struct infoGuide: View {
         }
         .padding()
         .background(LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom))
-    }
-}
-
-struct scoreBoard: View {
-    @Environment(\.dismiss) var dismiss
-    
-    var score: Int
-    var round: Int
-    
-    var body: some View {
-        ZStack {
-            LinearGradient(colors: [.white, .blue], startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
-            VStack {
-                Text("Match Ended")
-                    .font(.title)
-                
-                Spacer()
-                
-                Text("Your total score is \(score)")
-                
-                Spacer()
-            }
-        }
     }
 }
 
